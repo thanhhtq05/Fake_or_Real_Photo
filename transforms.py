@@ -1,10 +1,3 @@
-"""
-transforms.py
-QUAN TRỌNG: File này phải được import CHUNG bởi cả train.py và inference/API.
-Bài học từ project traffic sign: nếu train và inference dùng transform khác nhau
-(ví dụ khác mean/std, khác resize) -> model sẽ predict sai một cách âm thầm,
-không báo lỗi gì cả, rất khó debug.
-"""
 
 from torchvision import transforms
 
@@ -15,12 +8,12 @@ STD  = [0.23757432401180267, 0.2374235838651657, 0.2659563422203064]
 IMG_SIZE = 32
 
 # ---- Transform cho training: có augmentation ----
-# Lưu ý: KHÔNG dùng augment phá tần số cao (blur mạnh, JPEG random quality)
+# KHÔNG dùng augment phá tần số cao (blur mạnh, JPEG random quality)
 # vì fake-image artifact thường nằm ở high-frequency, augment mạnh có thể xóa mất.
 train_transform = transforms.Compose([
     transforms.RandomHorizontalFlip(p=0.5),
     transforms.RandomCrop(IMG_SIZE, padding=2, padding_mode="reflect"),
-    transforms.ColorJitter(brightness=0.1, contrast=0.1),  # nhẹ thôi
+    transforms.ColorJitter(brightness=0.1, contrast=0.1),  
     transforms.ToTensor(),
     transforms.Normalize(mean=MEAN, std=STD),
 ])
@@ -33,13 +26,7 @@ eval_transform = transforms.Compose([
 
 
 def compute_mean_std(dataset_root: str):
-    """
-    Chạy 1 lần trên tập train để lấy mean/std thật, sau đó paste kết quả
-    vào MEAN, STD ở trên.
-
-    Usage:
-        python -c "from transforms import compute_mean_std; compute_mean_std('data/train')"
-    """
+    
     import torch
     from torchvision import datasets
     from torch.utils.data import DataLoader

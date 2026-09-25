@@ -3,3 +3,12 @@ README.md
 venv/
 .vscode
 __pycache__
+Fake_vs_Real_Photo/
+worst_errors.png
+analysis.py 
+compute.py
+evaluation_curves_baseline.png
+evaluation_curves_dual_branch.png
+evaluation_curves_cnn.png
+evaluation_curves.png
+tune.py

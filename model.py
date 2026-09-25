@@ -1,15 +1,12 @@
-"""
-model.py — BƯỚC 2 (Lựa chọn mô hình)
+# """"""
+# 1. FakeDetectorCNN: baseline CNN 3-block
+# 2. FakeDetectorDualBranch: CNN + nhánh phân tích tần số (FFT magnitude spectrum),
+#    vì artifact của ảnh AI-generated (GAN/diffusion) thường lộ rõ ở high-frequency
+#    domain hơn là ở pixel space thường.
 
-2 kiến trúc:
-1. FakeDetectorCNN: baseline CNN 3-block, nhẹ, phù hợp ảnh 32x32.
-2. FakeDetectorDualBranch: CNN + nhánh phân tích tần số (FFT magnitude spectrum),
-   vì artifact của ảnh AI-generated (GAN/diffusion) thường lộ rõ ở high-frequency
-   domain hơn là ở pixel space thường.
-
-Lý do không chọn ViT / ResNet lớn: ảnh 32x32 quá nhỏ, patch-based transformer
-không đủ context, còn ResNet50 dễ overfit và lãng phí compute cho input bé.
-"""
+# Lý do không chọn ViT / ResNet lớn: ảnh 32x32 quá nhỏ, patch-based transformer
+# không đủ context, còn ResNet50 dễ overfit và lãng phí compute cho input bé.
+# """
 
 import torch
 import torch.nn as nn
@@ -34,7 +31,7 @@ class ConvBlock(nn.Module):
 
 
 class FakeDetectorCNN(nn.Module):
-    """Baseline. Dùng cái này trước, đơn giản và đủ mạnh để có số liệu tham chiếu."""
+
 
     def __init__(self, num_classes=2, dropout=0.3):
         super().__init__()
@@ -56,11 +53,6 @@ class FakeDetectorCNN(nn.Module):
 
 
 class FrequencyBranch(nn.Module):
-    """
-    Chuyển ảnh sang FFT magnitude spectrum (log-scale) rồi đưa qua vài conv nhỏ.
-    Trực giác: ảnh GAN/diffusion thường để lại "vân" tuần hoàn (checkerboard,
-    grid artifact từ upsampling) mà mắt thường không thấy nhưng phổ tần số thì có.
-    """
 
     def __init__(self, out_dim=64):
         super().__init__()
@@ -84,7 +76,7 @@ class FrequencyBranch(nn.Module):
 
 
 class FakeDetectorDualBranch(nn.Module):
-    """Nâng cao: kết hợp pixel-space CNN + frequency-domain branch."""
+    # CNN + frequency-domain branch
 
     def __init__(self, num_classes=2, dropout=0.3):
         super().__init__()
